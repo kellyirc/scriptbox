@@ -1,0 +1,34 @@
+{
+  "name": "scriptbox",
+  "version": "0.0.0",
+  "description": "A sandbox with scripts, as written in Node.js",
+  "main": "lib/main.js",
+  "scripts": {
+    "postinstall": "bower install",
+    "start": "node .",
+    "test": "grunt test",
+    "webdriver": "phantomjs --webdriver=9515"
+  },
+  "keywords": [],
+  "author": "Raymond Hammarling",
+  "license": "MIT",
+  "devDependencies": {
+    "chai-as-promised": "^4.1.1",
+    "coffeeify": "^1.0.0",
+    "chai": "^1.10.0",
+    "grunt-mocha-test": "^0.12.4",
+    "grunt-contrib-coffee": "^0.12.0",
+    "grunt-coffeelint": "0.0.13",
+    "load-grunt-tasks": "^2.0.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "browserify": "^8.0.2",
+    "grunt-browserify": "^3.2.1",
+    "grunt-contrib-less": "^1.0.0"
+  },
+  "dependencies": {
+    "express": "^4.10.6",
+    "morgan": "^1.5.0",
+    "serve-static": "^1.7.1",
+    "lodash": "^2.4.1"
+  }
+}
