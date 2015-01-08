@@ -27,6 +27,8 @@ module.exports = class Rect
 			centerY:
 				set: (v) => @y = v - @height / 2
 				get: => @y + @height / 2
+			center:
+				get: => x: @centerX, y: @centerY
 
 		switch
 			when obj.x? and obj.y? and obj.width? and obj.height?
