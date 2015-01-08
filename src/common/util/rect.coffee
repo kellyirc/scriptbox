@@ -21,6 +21,13 @@ module.exports = class Rect
 				set: (v) => @height = v - @y
 				get: => @x + @height
 
+			centerX:
+				set: (v) => @x = v - @width / 2
+				get: => @x + @width / 2
+			centerY:
+				set: (v) => @y = v - @height / 2
+				get: => @y + @height / 2
+
 		switch
 			when obj.x? and obj.y? and obj.width? and obj.height?
 				{@x, @y, @width, @height} = obj
