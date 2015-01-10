@@ -16,10 +16,10 @@ module.exports = class Rect
 
 			right:
 				set: (v) => @width = v - @x
-				get: => @y + @width
+				get: => @x + @width
 			bottom:
 				set: (v) => @height = v - @y
-				get: => @x + @height
+				get: => @y + @height
 
 			centerX:
 				set: (v) => @x = v - @width / 2
