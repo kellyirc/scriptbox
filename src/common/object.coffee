@@ -7,3 +7,12 @@ module.exports = class Object
 			y: @y + @height/2
 			@width, @height
 		}
+
+		Object.defineProperties @,
+			x:
+				get: => @bounds.x
+				set: (v) => @bounds.x = v
+
+			y:
+				get: => @bounds.y
+				set: (v) => @bounds.y = v
