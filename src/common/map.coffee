@@ -27,7 +27,7 @@ module.exports = class Map
 
 			df2 = if obj1.static and obj2.static then 0 else 1 - df1
 
-			# separate on X axis
+			# calculate X overlap
 			xOverlap = 0
 
 			o1 = obj1.bounds.right - obj2.bounds.left
@@ -35,10 +35,7 @@ module.exports = class Map
 
 			xOverlap = if (Math.abs o1) < (Math.abs o2) then o1 else o2
 
-			obj1.x -= xOverlap * df1
-			obj2.x += xOverlap * df2
-
-			# separate on Y axis
+			# calculate Y overlap
 			yOverlap = 0
 
 			o1 = obj1.bounds.bottom - obj2.bounds.top
@@ -46,7 +43,13 @@ module.exports = class Map
 
 			yOverlap = if (Math.abs o1) < (Math.abs o2) then o1 else o2
 
-			obj1.y -= yOverlap * df1
-			obj2.y += yOverlap * df2
+			# separate on axis with smallest overlap
+			if (Math.abs xOverlap) < (Math.abs yOverlap)
+				obj1.x -= xOverlap * df1
+				obj2.x += xOverlap * df2
+
+			else
+				obj1.y -= yOverlap * df1
+				obj2.y += yOverlap * df2
 
 		return
