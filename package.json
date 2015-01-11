@@ -2,7 +2,7 @@
   "name": "scriptbox",
   "version": "0.0.0",
   "description": "A sandbox with scripts, as written in Node.js",
-  "main": "lib/main.js",
+  "main": "lib/server/index.js",
   "scripts": {
     "postinstall": "bower install",
     "start": "node .",
@@ -23,7 +23,9 @@
     "grunt-contrib-watch": "^0.6.1",
     "browserify": "^8.0.2",
     "grunt-browserify": "^3.2.1",
-    "grunt-contrib-less": "^1.0.0"
+    "grunt-contrib-less": "^1.0.0",
+    "grunt-concurrent": "^1.0.0",
+    "grunt-execute": "^0.2.2"
   },
   "dependencies": {
     "express": "^4.10.6",

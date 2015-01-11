@@ -55,6 +55,19 @@ module.exports = (grunt) ->
 				src: ['test/server/**/*.test.coffee']
 
 		#### Misc (automated testing using watch)
+		concurrent:
+			options:
+				logConcurrentOutput: true
+
+			dev:
+				tasks: [
+					'watch:main', 'execute:main_server'
+				]
+
+		execute:
+			main_server:
+				src: ['<%= pkg.main %>']
+
 		watch:
 			main:
 				files: ['src/**/*', 'test/**/*', 'public/styles/**/*']
