@@ -29,7 +29,7 @@ module.exports = class GameObject
 		@map.updatePosition @
 
 	update: (delta) ->
-		@move (
+		@move(
 			@x + @velocity.x * delta + (@acceleration.x * delta * delta) / 2
 			@y + @velocity.y * delta + (@acceleration.y * delta * delta) / 2
 		)
