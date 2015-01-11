@@ -31,6 +31,7 @@ module.exports = (grunt) ->
 
 					browserifyOptions:
 						extensions: ['.coffee', '.js', '.json']
+						noParse: [require.resolve 'phaser/dist/phaser-no-libs']
 
 		#### Linting
 		coffeelint:
