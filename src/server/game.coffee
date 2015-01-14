@@ -5,6 +5,8 @@ module.exports = class Game
 	constructor: (@primus) ->
 		@maps = []
 
+		@tickRate = 1000/10
+
 		@primus
 		.on 'connection', @connection
 		.on 'disconnection', @disconnection
@@ -17,6 +19,6 @@ module.exports = class Game
 	tick: =>
 		for map in @maps
 			for obj in map.objects
-				obj.update 1000/10
+				obj.update @tickRate
 
-		setTimeout @tick, 1000/10
+		setTimeout @tick, @tickRate
