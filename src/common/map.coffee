@@ -10,6 +10,9 @@ module.exports = class Map
 		# do nothing ATM
 
 	collision: ->
+		for obj in @objects
+			(obj.collided = {top: no, bottom: no, left: no, right: no})
+
 		for obj1, i in @objects
 			for j in [i+1...@objects.length]
 				obj2 = @objects[j]
@@ -48,8 +51,32 @@ module.exports = class Map
 				obj1.x -= xOverlap * df1
 				obj2.x += xOverlap * df2
 
+				obj1.velocity.x = obj2.velocity.x = 0
+
+				if xOverlap > 0
+					# obj1 colliding on right, obj2 colliding on left
+					obj1.collided.right = yes
+					obj2.collided.left = yes
+
+				else
+					# obj2 colliding on left, obj1 colliding on right
+					obj1.collided.left = yes
+					obj2.collided.right = yes
+
 			else
 				obj1.y -= yOverlap * df1
 				obj2.y += yOverlap * df2
+
+				obj1.velocity.y = obj2.velocity.y = 0
+
+				if yOverlap > 0
+					# obj1 colliding on bottom, obj2 colliding on top
+					obj1.collided.bottom = yes
+					obj2.collided.top = yes
+
+				else
+					# obj2 colliding on bottom, obj1 colliding on top
+					obj1.collided.top = yes
+					obj2.collided.bottom = yes
 
 		return
