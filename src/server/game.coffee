@@ -11,18 +11,36 @@ module.exports = class Game
 		@tickRate = 1000/10
 
 		@map = new Map
+		@map.id = 'hub'
 		@maps.push @map
 
 		@primus
 		.on 'connection', @connection
 		.on 'disconnection', @disconnection
 
+		.on 'joinroom', (room, spark) => console.log spark.address, 'joined', room
+		.on 'leaveroom', (room, spark) => console.log spark.address, 'left', room
+
+		.on 'error', (err) ->
+			console.log err.stack
+
 	connection: (spark) =>
 		console.log 'Connection!', spark.address
 
-		@addObject @map, 64, 0, 32, 32
+		object = @addObject @map, 64, 0, 32, 32
+
+		@clients[spark.id] =
+			map: @map
+			object: object
+			spark: spark
+
+		# always make players join hub world first
+		spark.join "map:#{@clients[spark.id].map.id}"
 
 	disconnection: (spark) =>
+		spark.leave "map:#{@clients[spark.id].map.id}"
+
+		delete @clients[spark.id]
 
 	addObject: (map, x, y, width, height) ->
 		obj = new GameObject map, {x, y, width, height}
