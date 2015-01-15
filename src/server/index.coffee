@@ -19,6 +19,8 @@ app.use serveStatic path.join __dirname, '..', '..', 'public'
 server = http.createServer app
 primus = new Primus server
 
+primus.use 'rooms', require 'primus-rooms'
+
 server.listen 80
 
 # game
