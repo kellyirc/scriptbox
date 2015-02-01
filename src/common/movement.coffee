@@ -1,6 +1,6 @@
 NumFunc = require './util/numfunc'
 
-module.exports = class Velocity
+module.exports = class Movement
 	constructor (ident, ang = 0, targetvel = 0, accel, currentvel): ->
 		@identifier
 		@angle = ang
@@ -15,7 +15,7 @@ module.exports = class Velocity
 		for i in [x,y]
 			NumFunc.stepTowards(@currentvelocity.i, @targetvelocity.i, @acceleration.i) if @acceleration.i unless @targetvelocity.i == @currentvelocity.i
 			
-	# For changing the velocity while it already exists
+	# For changing the melocity while it already exists
 	adjust: (ang, targetvel, accel, currentvel): ->
 		@angle = ang if ang?
 		if targetvel? or ang?
