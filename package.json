@@ -4,7 +4,6 @@
   "description": "A sandbox with scripts, as written in Node.js",
   "main": "lib/server/index.js",
   "scripts": {
-    "postinstall": "bower install",
     "start": "node .",
     "test": "grunt test",
     "webdriver": "phantomjs --webdriver=9515"
