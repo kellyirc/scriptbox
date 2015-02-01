@@ -1,29 +1,36 @@
 NumFunc = require './util/numfunc'
 
 module.exports = class Movement
-	constructor (ident, ang = 0, targetvel = 0, accel, currentvel): ->
+	constructor: (ident, ang = 0, targetvel = 0, accel, currentvel) ->
 		@identifier
 		@angle = ang
-		@targetvelocity = x: Math.cos(angle)*targetvel, y: Math.sin(angle)*targetvel
-		@acceleration = x: Math.cos(angle)*accel, y: Math.sin(angle)*accel if accel
-		@currentvelocity = x: Math.cos(angle)*currentvel, y: Math.sin(angle)*currentvel if currentvel
+		cos = Math.cos(@angle)
+		sin = Math.sin(@angle)
+		@targetvelocity = x: cos*targetvel, y: sin*targetvel
+		@acceleration = x: cos*accel, y: sin*accel if accel
+		@currentvelocity = x: cos*currentvel, y: sin*currentvel if currentvel
 		unless currentvel?
 			for i in [x,y]
 				@currentvelocity.i = @targetvelocity.i unless @accel?
-			
+
 	update: (delta) ->
 		for i in [x,y]
-			NumFunc.stepTowards(@currentvelocity.i, @targetvelocity.i, @acceleration.i) if @acceleration.i unless @targetvelocity.i == @currentvelocity.i
-			
-	# For changing the melocity while it already exists
-	adjust: (ang, targetvel, accel, currentvel): ->
+			if @acceleration.i
+				unless @targetvelocity.i == @currentvelocity.i
+					NumFunc.stepTowards(@currentvelocity.i, @targetvelocity.i, @acceleration.i)
+					
+	# For changing the movement while it already exists
+
+	adjust: (ang, targetvel, accel, currentvel) ->
 		@angle = ang if ang?
+		cos = Math.cos(@angle)
+		sin = Math.sin(@angle)
 		if targetvel? or ang?
-			targetvelocity.x = Math.cos(angle)*targetvel
-			targetvelocity.y = Math.sin(angle)*targetvel
+			targetvelocity.x = cos*targetvel
+			targetvelocity.y = sin*targetvel
 		if accel? or ang?
-			acceleration.x = Math.cos(angle)*accel
-			acceleration.y = Math.sin(angle)*accel
+			acceleration.x = cos*accel
+			acceleration.y = sin*accel
 		if currentvel? or ang?
-			currentvelocity.x = Math.cos(angle)*targetvel
-			currentvelocity.y = Math.sin(angle)*targetvel
+			currentvelocity.x = cos*targetvel
+			currentvelocity.y = sin*targetvel
