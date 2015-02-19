@@ -1,4 +1,6 @@
 Rect = require './util/rect'
+_ = require 'lodash'
+Movement = require './movement'
 
 module.exports = class GameObject
 	constructor: (@map, {@x, @y, @width, @height}) ->
@@ -19,7 +21,7 @@ module.exports = class GameObject
 
 		@velocity = x: 0, y: 0
 		@acceleration = x: 0, y: 0
-
+		@movements = {default:new Movement}
 		@static = no
 
 	move: (x, y) ->
@@ -29,10 +31,32 @@ module.exports = class GameObject
 		@map.updatePosition @
 
 	update: (delta) ->
+		@velocity.x = _.reduce @movements, (p, c) ->
+			p + c.currentvelocity.x
+		, 0
+		@velocity.y = _.reduce @movements, (p, c) ->
+			p + c.currentvelocity.y
+		, 0
+		@acceleration.x = _.reduce @movements, (p, c) ->
+			p + c.currentAcc(delta).x
+		, 0
+		@acceleration.y = _.reduce @movements, (p, c) ->
+			p + c.currentAcc(delta).y
+		, 0
+			
 		@move(
 			@x + @velocity.x * delta + (@acceleration.x * delta * delta) / 2
 			@y + @velocity.y * delta + (@acceleration.y * delta * delta) / 2
 		)
-
-		@velocity.x += @acceleration.x * delta
-		@velocity.y += @acceleration.y * delta
+		
+		console.log @velocity.x
+		
+		_.each @movements, (o) -> o.update(delta)
+		
+	addMovement: (name = "default", ang = 0, targetvel = 0, accel, currentvel) ->
+		if @movements[name]
+			@movements[name].adjust ang, targetvel, accel, currentvel
+		else
+			@movements[name] = new Movement ang, targetvel, accel, currentvel
+		
+		
