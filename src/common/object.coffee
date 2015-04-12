@@ -32,10 +32,10 @@ module.exports = class GameObject
 
 	update: (delta) ->
 		@velocity.x = _.reduce @movements, (p, c) ->
-			p + c.currentvelocity.x
+			p + c.currentVelocity.x
 		, 0
 		@velocity.y = _.reduce @movements, (p, c) ->
-			p + c.currentvelocity.y
+			p + c.currentVelocity.y
 		, 0
 		@acceleration.x = _.reduce @movements, (p, c) ->
 			p + c.currentAcc(delta).x
