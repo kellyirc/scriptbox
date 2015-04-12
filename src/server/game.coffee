@@ -48,7 +48,7 @@ module.exports = class Game
 		obj.static = no
 
 		obj.setYAcceleration 10
-		obj.setYTargetVelocity -20
+		obj.setYTargetVelocity 20
 
 		map.objects.push obj
 

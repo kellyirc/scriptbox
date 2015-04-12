@@ -20,14 +20,14 @@ module.exports = class Movement
 	currentAcc: (delta) ->
 		xDir = if @currentVelocity.x < @targetVelocity.x then 1 else -1
 		yDir = if @currentVelocity.y < @targetVelocity.y then 1 else -1
-		x: if @currentVelocity.x is @targetVelocity.x then 0 else @acceleration*xDir
-		y: if @currentVelocity.y is @targetVelocity.y then 0 else @acceleration*yDir
+		x: if @currentVelocity.x is @targetVelocity.x then 0 else @acceleration.x*xDir
+		y: if @currentVelocity.y is @targetVelocity.y then 0 else @acceleration.y*yDir
 	
 	update: (delta) ->
 		for i in ["x","y"]
 			if @acceleration[i]
 				unless @targetVelocity[i] == @currentVelocity[i]
-					NumFunc.stepTowards(
+					@currentVelocity[i] = NumFunc.stepTowards(
 						@currentVelocity[i], @targetVelocity[i], @acceleration[i]*delta
 					)
 					
