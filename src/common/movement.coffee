@@ -18,8 +18,8 @@ module.exports = class Movement
 				@currentVelocity.y = @targetVelocity.y
 
 	currentAcc: (delta) ->
-		xdir = if @currentVelocity.x < @targetVelocity.x then 1 else -1
-		ydir = if @currentVelocity.y < @targetVelocity.y then 1 else -1
+		xDir = if @currentVelocity.x < @targetVelocity.x then 1 else -1
+		yDir = if @currentVelocity.y < @targetVelocity.y then 1 else -1
 		x: if @currentVelocity.x is @targetVelocity.x then 0 else @acceleration*xDir
 		y: if @currentVelocity.y is @targetVelocity.y then 0 else @acceleration*yDir
 	

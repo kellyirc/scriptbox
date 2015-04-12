@@ -49,8 +49,6 @@ module.exports = class GameObject
 			@y + @velocity.y * delta + (@acceleration.y * delta * delta) / 2
 		)
 		
-		console.log @velocity.x
-		
 		_.each @movements, (o) -> o.update(delta)
 		
 	addMovement: (name = "default", ang, targetVel, accel, currentVel) ->
