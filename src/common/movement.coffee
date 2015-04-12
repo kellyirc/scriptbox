@@ -1,47 +1,47 @@
 NumFunc = require './util/numfunc'
 
 module.exports = class Movement
-	constructor: (ang = 0, targetvel = 0, accel, currentvel) ->
+	constructor: (ang = 0, targetVel = 0, accel, currentVel) ->
 		@angle = ang
 		cos = Math.cos(@angle)
 		sin = Math.sin(@angle)
-		@targetvelocity = x: cos*targetvel, y: sin*targetvel
+		@targetVelocity = x: cos*targetVel, y: sin*targetVel
 		@acceleration =
 			x:if accel then accel*cos else 0
 			y:if accel then accel*sin else 0
-		@currentvelocity =
-			x:currentvel*cos ?= 0
-			y:currentvel*sin ?= 0
+		@currentVelocity =
+			x:currentVel*cos ?= 0
+			y:currentVel*sin ?= 0
 		unless accel?
-			unless currentvel?
-				@currentvelocity.x = @targetvelocity.x
-				@currentvelocity.y = @targetvelocity.y
+			unless currentVel?
+				@currentVelocity.x = @targetVelocity.x
+				@currentVelocity.y = @targetVelocity.y
 
 	currentAcc: (delta) ->
-		xdir = if @currentvelocity.x < @targetvelocity.x then 1 else -1
-		ydir = if @currentvelocity.y < @targetvelocity.y then 1 else -1
-		x: if @currentvelocity.x is @targetvelocity.x then 0 else @acceleration*xdir
-		y: if @currentvelocity.y is @targetvelocity.y then 0 else @acceleration*ydir
+		xdir = if @currentVelocity.x < @targetVelocity.x then 1 else -1
+		ydir = if @currentVelocity.y < @targetVelocity.y then 1 else -1
+		x: if @currentVelocity.x is @targetVelocity.x then 0 else @acceleration*xDir
+		y: if @currentVelocity.y is @targetVelocity.y then 0 else @acceleration*yDir
 	
 	update: (delta) ->
 		for i in ["x","y"]
 			if @acceleration[i]
-				unless @targetvelocity[i] == @currentvelocity[i]
+				unless @targetVelocity[i] == @currentVelocity[i]
 					NumFunc.stepTowards(
-						@currentvelocity[i], @targetvelocity[i], @acceleration[i]*delta
+						@currentVelocity[i], @targetVelocity[i], @acceleration[i]*delta
 					)
 					
 	# For changing the movement while it already exists
-	adjust: (ang, targetvel, accel, currentvel) ->
+	adjust: (ang, targetVel, accel, currentVel) ->
 		@angle = ang if ang?
 		cos = Math.cos(@angle)
 		sin = Math.sin(@angle)
-		if targetvel? or ang?
-			@targetvelocity.x = cos*targetvel
-			@targetvelocity.y = sin*targetvel
+		if targetVel? or ang?
+			@targetVelocity.x = cos*targetVel
+			@targetVelocity.y = sin*targetVel
 		if accel? or ang?
 			@acceleration.x = cos*accel
 			@acceleration.y = sin*accel
-		if currentvel? or ang?
-			@currentvelocity.x = cos*targetvel
-			@currentvelocity.y = sin*targetvel
+		if currentVel? or ang?
+			@currentVelocity.x = cos*targetVel
+			@currentVelocity.y = sin*targetVel

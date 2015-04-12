@@ -53,10 +53,10 @@ module.exports = class GameObject
 		
 		_.each @movements, (o) -> o.update(delta)
 		
-	addMovement: (name = "default", ang = 0, targetvel = 0, accel, currentvel) ->
+	addMovement: (name = "default", ang = 0, targetVel = 0, accel, currentVel) ->
 		if @movements[name]
-			@movements[name].adjust ang, targetvel, accel, currentvel
+			@movements[name].adjust ang, targetVel, accel, currentVel
 		else
-			@movements[name] = new Movement ang, targetvel, accel, currentvel
+			@movements[name] = new Movement ang, targetVel, accel, currentVel
 		
 		
