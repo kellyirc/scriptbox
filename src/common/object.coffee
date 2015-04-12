@@ -82,7 +82,7 @@ module.exports = class GameObject
 	setYTargetVelocity: (vel = 0) ->
 		@movements["default"].targetVelocity.y = vel
 		
-	setAcceleration: (acc = 0, ang = 0)
+	setAcceleration: (acc = 0, ang = 0) ->
 		@movements["default"].acceleration.x = cos(ang)*acc
 		
 	setXAcceleration: (acc = 0) ->
