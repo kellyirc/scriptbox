@@ -30,6 +30,8 @@ module.exports = class Movement
 					@currentVelocity[i] = NumFunc.stepTowards(
 						@currentVelocity[i], @targetVelocity[i], @acceleration[i]*delta
 					)
+			else
+				@currentVelocity[i] = @targetVelocity[i]
 					
 	# For changing the movement while it already exists
 	adjust: (ang, targetVel, accel, currentVel) ->

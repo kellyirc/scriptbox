@@ -50,14 +50,16 @@ module.exports = class Map
 			if (Math.abs xOverlap) < (Math.abs yOverlap)
 				obj1.x -= xOverlap * df1
 				obj2.x += xOverlap * df2
-
-				obj1.velocity.x = obj2.velocity.x = 0
-
+				
 				for name,movement of obj1.movements
-					movement.currentVelocity.x = 0
+					if (movement.currentVelocity.x > 0 is obj1.velocity.x > 0)
+						movement.currentVelocity.x = 0
 
 				for name,movement of obj2.movements
-					movement.currentVelocity.x = 0
+					if (movement.currentVelocity.x > 0 is obj2.velocity.x > 0)
+						movement.currentVelocity.x = 0
+					
+				obj1.velocity.x = obj2.velocity.x = 0
 
 				if xOverlap > 0
 					# obj1 colliding on right, obj2 colliding on left
