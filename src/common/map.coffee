@@ -53,6 +53,12 @@ module.exports = class Map
 
 				obj1.velocity.x = obj2.velocity.x = 0
 
+				for name,movement of obj1.movements
+					movement.currentVelocity.x = 0
+
+				for name,movement of obj2.movements
+					movement.currentVelocity.x = 0
+
 				if xOverlap > 0
 					# obj1 colliding on right, obj2 colliding on left
 					obj1.collided.right = yes
@@ -68,6 +74,12 @@ module.exports = class Map
 				obj2.y += yOverlap * df2
 
 				obj1.velocity.y = obj2.velocity.y = 0
+
+				for name,movement of obj1.movements
+					movement.currentVelocity.y = 0
+
+				for name,movement of obj2.movements
+					movement.currentVelocity.y = 0
 
 				if yOverlap > 0
 					# obj1 colliding on bottom, obj2 colliding on top
