@@ -21,7 +21,7 @@ primus = new Primus server
 
 primus.use 'rooms', require 'primus-rooms'
 
-server.listen 80
+server.listen 12124
 
 # game
 Game = require './game'
