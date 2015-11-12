@@ -1,14 +1,20 @@
 Map = require '../common/map'
 GameObject = require '../common/object'
+NetClient = require '../client/netclient'
 
 module.exports = class MainState extends Phaser.State
 	preload: ->
 
 	create: ->
+		ip = "localhost"
+		port = "12123"
 		@map = new Map
 
 		@addObject 64, 0, 32, 32, no, 0x0055ff
 		@addObject 40, 300, 160, 32, yes, 0xffffff
+		
+		@server = new NetClient ip, port
+		@input.keyboard.addCallbacks null, @server.keyPress, @server.keyRelease
 
 	addObject: (x, y, width, height, _static = yes, color) ->
 		obj = new GameObject @map, {x, y, width, height}
