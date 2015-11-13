@@ -1,9 +1,10 @@
 module.exports = class Map
 	constructor: ->
 		@objects = []
+		@objectChangeHandler = null
 
 	add: (object) ->
-
+		object.changeHandler = @objectChangeHandler
 	remove: (object) ->
 
 	updatePosition: (object) ->
