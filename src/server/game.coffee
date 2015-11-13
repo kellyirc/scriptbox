@@ -1,6 +1,7 @@
 Map = require '../common/map'
 GameObject = require '../common/object'
 id = require '../common/id-generation'
+NetServer = require './netserver'
 
 module.exports = class Game
 	constructor: (@primus) ->
@@ -13,6 +14,8 @@ module.exports = class Game
 		@map = new Map
 		@map.id = 'hub'
 		@maps.push @map
+		
+		@netserver = new NetServer
 
 		@primus
 		.on 'connection', @connection
@@ -36,6 +39,8 @@ module.exports = class Game
 
 		# always make players join hub world first
 		spark.join "map:#{@clients[spark.id].map.id}"
+		
+		spark.on "data", (data) => @netserver.handleData spark, data
 
 	disconnection: (spark) =>
 		spark.leave "map:#{@clients[spark.id].map.id}"

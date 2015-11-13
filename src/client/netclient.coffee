@@ -1,10 +1,11 @@
+NetData = require '../common/netdata'
 module.exports = class NetClient
 	constructor: (ip, port) ->
 		@ip = ip
 		@port = port
 		
 	keyPress: (event) ->
-		console.log("PRESS:   {event.keyCode}")
+		global.primus.write new NetData("key", event.keyCode, "press")
 		
 	keyRelease: (event) ->
-		console.log("RELEASE: {event.keyCode}")
+		global.primus.write new NetData("key", event.keyCode, "release")
