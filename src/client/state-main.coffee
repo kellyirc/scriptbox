@@ -36,9 +36,10 @@ module.exports = class MainState extends Phaser.State
 		for obj in @map.objects
 			obj.update 0.16
 
+		@map.collision()
+		
+		for obj in @map.objects
 			obj.graphics.x = obj.bounds.left
 			obj.graphics.y = obj.bounds.top
-
-		@map.collision()
-
+		
 		null
