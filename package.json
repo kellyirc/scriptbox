@@ -34,6 +34,7 @@
     "phaser": "^2.2.2",
     "primus": "^2.4.12",
     "ws": "^0.6.5",
-    "primus-rooms": "^3.1.0"
+    "primus-rooms": "^3.1.0",
+    "serve-favicon": "^2.3.0"
   }
 }

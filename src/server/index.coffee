@@ -6,9 +6,12 @@ Primus = require 'primus'
 express = require 'express'
 morgan = require 'morgan'
 serveStatic = require 'serve-static'
+favicon = require 'serve-favicon'
 
 # express
 app = express()
+
+app.use favicon path.join __dirname, '..', '..', 'public', 'favicon.ico'
 
 app.use morgan()
 
