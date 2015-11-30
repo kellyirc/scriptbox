@@ -13,3 +13,6 @@ module.exports = class NetServer
 		
 	keyRelease: (spark, key, time) ->
 		console.log("RELEASE: #{key}")
+		
+	setMap: (spark, map) ->
+		spark.write new NetData("map", map, "set")

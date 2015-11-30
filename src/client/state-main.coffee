@@ -9,12 +9,24 @@ module.exports = class MainState extends Phaser.State
 		ip = "localhost"
 		port = "12123"
 		@map = new Map
-
-		@addObject 64, 0, 32, 32, no, 0x0055ff
-		@addObject 40, 300, 160, 32, yes, 0xffffff
 		
-		@server = new NetClient ip, port
+		@server = new NetClient @, ip, port
 		@input.keyboard.addCallbacks null, @server.keyPress, @server.keyRelease
+		
+		console.log "setting up callbacks"
+	
+		global.primus.on 'open', =>
+			console.log "Connected to server!"
+		
+		
+		global.primus.on 'data', (data) =>
+			console.log "data get!!"
+			@server.handleData data
+			
+		global.primus.on 'error', (err) =>
+			console.error "Error: ", err.stack
+			
+			
 
 	addObject: (x, y, width, height, _static = yes, color) ->
 		obj = new GameObject @map, {x, y, width, height}

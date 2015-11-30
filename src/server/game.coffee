@@ -12,6 +12,10 @@ module.exports = class Game
 		@tickRate = 1000/10
 
 		@map = new Map
+
+		@addObject @map, 64, 0, 32, 32
+		@addObject @map, 40, 300, 160, 32
+		
 		@map.id = 'hub'
 		@maps.push @map
 		
@@ -41,6 +45,8 @@ module.exports = class Game
 		spark.join "map:#{@clients[spark.id].map.id}"
 		
 		spark.on "data", (data) => @netserver.handleData spark, data
+		
+		@netserver.setMap spark, @map
 
 	disconnection: (spark) =>
 		spark.leave "map:#{@clients[spark.id].map.id}"
