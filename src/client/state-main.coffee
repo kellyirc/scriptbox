@@ -21,7 +21,7 @@ module.exports = class MainState extends Phaser.State
 		
 		global.primus.on 'data', (data) =>
 			console.log "data get!!"
-			@server.handleData data
+			@server.handleData @, data
 			
 		global.primus.on 'error', (err) =>
 			console.error "Error: ", err.stack
@@ -37,16 +37,20 @@ module.exports = class MainState extends Phaser.State
 
 		@map.objects.push obj
 
-		obj.graphics = @game.add.graphics x, y
-
-		obj.graphics.beginFill color, 1
-		obj.graphics.drawRect 0, 0, width, height
+		obj.graphics = @setObjectGraphics(obj, color)
 
 		obj
+		
+	setObjectGraphics: (obj, color) ->
+		obj.graphics = @game.add.graphics obj.bounds.x, obj.bounds.y
+		
+		obj.graphics.beginFill color, 1
+		obj.graphics.drawRect 0, 0, obj.bounds.width, obj.bounds.height
 
 	update: ->
 		for obj in @map.objects
-			obj.update 0.16
+			if(!obj.static)
+				obj.update 0.16
 
 		@map.collision()
 		

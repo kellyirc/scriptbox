@@ -1,3 +1,4 @@
+_ = require 'lodash'
 module.exports = class Rect
 	constructor: (obj) ->
 		@x = 0
@@ -49,3 +50,6 @@ module.exports = class Rect
 			@top > rect.bottom or
 			@bottom < rect.top
 		)
+		
+	@revive: (rect, owner) ->
+		return _.assign(new Rect(owner), rect)

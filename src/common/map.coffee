@@ -1,3 +1,5 @@
+GameObject = require '../common/object'
+_ = require 'lodash'
 module.exports = class Map
 	constructor: ->
 		@objects = []
@@ -95,3 +97,11 @@ module.exports = class Map
 					obj2.collided.bottom = yes
 
 		return
+		
+	@revive: (map) ->
+		map = _.assign(new Map, map)
+		for o of map.objects
+			map.objects[o] = GameObject.revive map.objects[o]
+			map.objects[o].map = map
+		map
+		

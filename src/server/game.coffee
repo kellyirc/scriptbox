@@ -13,8 +13,9 @@ module.exports = class Game
 
 		@map = new Map
 
-		@addObject @map, 64, 0, 32, 32
-		@addObject @map, 40, 300, 160, 32
+		obj = @addObject @map, 40, 300, 160, 32
+		
+		console.log obj.static
 		
 		@map.id = 'hub'
 		@maps.push @map
@@ -34,7 +35,7 @@ module.exports = class Game
 	connection: (spark) =>
 		console.log 'Connection!', spark.address
 
-		object = @addObject @map, 64, 0, 32, 32
+		object = @addObject @map, 64, 0, 32, 32, false
 
 		@clients[spark.id] =
 			map: @map
@@ -53,22 +54,25 @@ module.exports = class Game
 
 		delete @clients[spark.id]
 
-	addObject: (map, x, y, width, height) ->
+	addObject: (map, x, y, width, height, _static = yes) ->
 		obj = new GameObject map, {x, y, width, height}
 		obj.id = id.generate()
-		obj.static = no
+		obj.static = _static
 
-		obj.setYAcceleration 10
-		obj.setYTargetVelocity 50
+		obj.setYAcceleration 10 if not _static
+		obj.setYTargetVelocity 50 if not _static
 
 		map.objects.push obj
+		
+		console.log obj
 
 		obj
 
 	tick: =>
 		for map in @maps
 			for obj in map.objects
-				obj.update 1/@tickRate
+				if(!obj.static)
+					obj.update 1/@tickRate
 
 			map.collision()
 

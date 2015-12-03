@@ -1,5 +1,7 @@
 NetData = require '../common/netdata'
 MainState = require '../client/state-main'
+GameObject = require '../common/object'
+Map = require '../common/map'
 
 module.exports = class NetClient
 	constructor: (state, ip, port) ->
@@ -7,14 +9,14 @@ module.exports = class NetClient
 		@port = port
 		@state = state
 		
-	handleData: (data) =>
+	handleData: (phaserState, data) =>
 		switch data.type
 			when "map"
 				switch data.state
 					when "set"
-						@setMap data.value
+						@setMap phaserState, data.value
 					when "update"
-						@setMap data.value
+						@setMap phaserState, data.value
 		
 	keyPress: (event) ->
 		global.primus.write new NetData("key", event.keyCode, "press")
@@ -22,12 +24,11 @@ module.exports = class NetClient
 	keyRelease: (event) ->
 		global.primus.write new NetData("key", event.keyCode, "release")
 		
-	setMap: (map) ->
-		console.log "hfvjklshdbgk"
+	setMap: (state, map) ->
 		delete state.map
-		state.map = map
-		for obj in map.objects
-			console.log obj
+		state.map = Map.revive(map)
+		for obj in state.map.objects
+			state.setObjectGraphics(obj, 0xFFFFFF)
 			
 		
 		

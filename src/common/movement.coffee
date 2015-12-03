@@ -1,4 +1,5 @@
 NumFunc = require './util/numfunc'
+_ = require 'lodash'
 
 module.exports = class Movement
 	constructor: (ang = 0, targetVel = 0, accel, currentVel) ->
@@ -47,3 +48,8 @@ module.exports = class Movement
 		if currentVel? or ang?
 			@currentVelocity.x = cos*targetVel
 			@currentVelocity.y = sin*targetVel
+			
+	@revive: (move) ->
+		newMove = new Movement()
+		return _.assign(newMove, move)
+		

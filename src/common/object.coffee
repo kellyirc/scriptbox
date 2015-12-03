@@ -4,6 +4,7 @@ Movement = require './movement'
 
 module.exports = class GameObject
 	constructor: (@map, {@x, @y, @width, @height}) ->
+		@type = "GameObject"
 		@bounds = new Rect {
 			x: @x - @width/2
 			y: @y - @height/2
@@ -91,5 +92,21 @@ module.exports = class GameObject
 		
 	toJSON: ->
 		_.omit this, 'map'
+		
+	@revive: (obj) ->
+		returnObj
+		switch(obj.type)
+			when "GameObject"
+				console.log obj.bounds
+				rectObj = _.pick obj.bounds, ['x', 'y', 'width', 'height']
+				newObj = new GameObject obj.map, rectObj
+				returnObj =  _.assign(newObj, obj)
+				returnObj.bounds = Rect.revive(returnObj.bounds, returnObj)
+				moves = returnObj.movements
+				for m of moves
+					moves[m] = Movement.revive moves[m]
+		console.log returnObj
+		returnObj
+		
 		
 		
