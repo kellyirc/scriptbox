@@ -89,4 +89,7 @@ module.exports = class GameObject
 	setYAcceleration: (acc = 0) ->
 		@movements["default"].acceleration.y = acc
 		
+	toJSON: ->
+		_.omit this, 'map'
+		
 		

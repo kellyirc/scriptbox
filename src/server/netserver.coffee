@@ -16,3 +16,4 @@ module.exports = class NetServer
 		
 	setMap: (spark, map) ->
 		spark.write new NetData("map", map, "set")
+		console.log map
