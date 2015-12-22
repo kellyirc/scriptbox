@@ -1,0 +1,14 @@
+{
+    "extends": "kellyirc",
+    "parser": "babel-eslint",
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    "globals": {
+        "Phaser": true,
+        "PIXI": true,
+        "window": true,
+        "Primus": true
+    }
+}
