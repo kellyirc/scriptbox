@@ -15,6 +15,7 @@ module.exports = class Game {
         this.maps = [];
         this.clients = {};
         this.tickRate = 1000/60;
+        this.lastTick = 0;
         this.map = new Map();
         this.addObject(this.map, 40, 300, 860, 32, 0xFFFFFF, true);
         
@@ -84,9 +85,13 @@ module.exports = class Game {
     }
     
     tick() {
-        this.updateMaps();
-        this.updateClients();
-        setTimeout(this.tick, this.tickRate);
+        if (Date.now() - this.lastTick > this.tickRate) {
+            console.log(Date.now() - this.lastTick);
+            this.lastTick = Date.now();
+            this.updateMaps();
+            this.updateClients();
+        }
+        setImmediate(this.tick);
     }
     
     updateMaps() {
