@@ -1,5 +1,6 @@
 var Map = require('../common/map');
 var GameObject = require('../common/object');
+var Player = require('../common/player');
 var id = require('../common/id-generation');
 var NetServer = require('./netserver');
 
@@ -13,9 +14,9 @@ module.exports = class Game {
         this.primus = primus;
         this.maps = [];
         this.clients = {};
-        this.tickRate = 1000/10;
+        this.tickRate = 1000/60;
         this.map = new Map();
-        this.addObject(this.map, 40, 300, 160, 32, true);
+        this.addObject(this.map, 40, 300, 860, 32, 0xFFFFFF, true);
         
         this.map.id = 'hub';
         this.maps.push(this.map);
@@ -33,7 +34,7 @@ module.exports = class Game {
     
     connection(spark) {
         console.log('Connection!', spark.address);
-        var object = this.addObject(this.map, 64, 0, 32, 32, false);
+        var object = this.addPlayer(this.map, 64, 0, 32, 32, parseInt(spark.address.ip.replace('.', '')) % 0x1000000, false);
         this.clients[spark.id] = {
             map: this.map,
             object: object,
@@ -42,16 +43,17 @@ module.exports = class Game {
         
         // Always make players join the hub world first
         spark.join('map:#{@clients[spark.id].map.id}');
-        spark.on('data', (data) => this.netServer.handleData(spark, data));
+        spark.on('data', (data) => this.netServer.handleData(this.clients[spark.id], data));
         this.netServer.setMap(spark, this.map);
     }
     
     disconnection(spark) {
         spark.leave('map:#{@clients[spark.id].map.id}');
+        this.map.remove(this.clients[spark.id].object);
         delete this.clients[spark.id];
     }
     
-    addObject(map, x, y, width, height, _static = true) {
+    addObject(map, x, y, width, height, color, _static = true) {
         var obj = new GameObject(map, { x: x, y: y, width: width, height: height });
         obj.id = id.generate();
         obj.immovable = _static;
@@ -59,21 +61,43 @@ module.exports = class Game {
         obj.setYAcceleration(_static ? 0 : 10);
         obj.setYTargetVelocity(_static ? 0 : 50);
         
-        map.objects.push(obj);
+        obj.color = color;
+        
+        map.add(obj);
+        
+        return obj;
+    }
+    
+    addPlayer(map, x, y, width, height, color, _static = true) {
+        var obj = new Player(map, { x: x, y: y, width: width, height: height });
+        obj.id = id.generate();
+        obj.immovable = _static;
+        
+        obj.setYAcceleration(_static ? 0 : 10);
+        obj.setYTargetVelocity(_static ? 0 : 50);
+        
+        obj.color = color;
+        
+        map.add(obj);
         
         return obj;
     }
     
     tick() {
-        for (var map in this.maps) {
-            for(var obj in this.maps[map].objects) {
-                if (!this.maps[map].objects[obj].immovable) {
-                    this.maps[map].objects[obj].update(1/this.tickRate);
-                }
-            }
-            this.maps[map].collision();
-        }
-        
+        this.updateMaps();
+        this.updateClients();
         setTimeout(this.tick, this.tickRate);
+    }
+    
+    updateMaps() {
+        for (var map in this.maps) {
+            this.maps[map].update(1/this.tickRate);
+        }
+    }
+    
+    updateClients() {
+        for (var client in this.clients) {
+            this.netServer.updateMap(this.clients[client].spark, this.clients[client].map.objectsDiff); 
+        }
     }
 };

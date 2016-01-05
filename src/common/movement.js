@@ -68,9 +68,7 @@ module.exports = class Movement {
     
     static revive(move) {
         var newMove = new Movement();
-        console.log(move);
         newMove = _.assign(newMove, move);
-        console.log(newMove);
         return newMove;
     }
 };

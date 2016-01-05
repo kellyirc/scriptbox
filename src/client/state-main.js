@@ -24,7 +24,6 @@ module.exports = class MainState extends Phaser.State {
         });
         
         global.primus.on('data', (data) => {
-            console.log(data);
             this.netClient.handleData(this, data);
         });
         global.primus.on('error', (err) => {
@@ -32,16 +31,18 @@ module.exports = class MainState extends Phaser.State {
         });
         
     }
-    addObject(x, y, width, height, _static = true, color) {
+    addObject(x, y, width, height, color, _static = true) {
         var obj = new GameObject(this.map, { x: x, y: y, width: width, height: height });
         obj.immovable = _static;
         
         obj.setYAcceleration(_static ? 10 : 0); 
         obj.setYTargetVelocity(_static ? 50 : 0); 
         
-        this.map.objects.push(obj);
+        obj.color = color;
         
-        obj.graphics = this.setObjectGraphics(obj, color);
+        this.map.add(obj);
+        
+        obj.graphics = this.setObjectGraphics(obj, obj.color);
         
         return obj;
     }
@@ -52,16 +53,7 @@ module.exports = class MainState extends Phaser.State {
         return obj.graphics.drawRect(0, 0, obj.bounds.width, obj.bounds.height);
     }
     update() {
-        for (var i = 0; i < this.map.objects.length; i++) {
-            var obj = this.map.objects[i];
-            if (!obj.immovable) {
-                obj.update(0.16);
-            }
-        }
-        
-        this.map.collision();
-        
-        for (var i2 = 0; i2 < this.map.objects.length; i2++) {
+        for (var i2 in this.map.objects) {
             var obj2 = this.map.objects[i2];
             obj2.graphics.x = obj2.bounds.left;
             obj2.graphics.y = obj2.bounds.top;

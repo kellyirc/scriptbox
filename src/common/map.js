@@ -2,20 +2,55 @@ var GameObject = require('./object');
 var _ = require('lodash');
 module.exports = class Map {
     constructor() {
-        this.objects = [];
-        this.objectChangeHandler = null;
+        this.objects = {};
+        this.objectsPrior = {};
+        this.objectsDiff = {
+            changes: [],
+            additions: [],
+            removals: []
+        };
     }
     
     add(object) {
-        object.ChangeHandler = this.objectChangeHandler;
+        this.objects[object.id.toString()] = object;
     }
     
     remove(object) {
-        return object;
+        delete this.objects[object.id.toString()];
     }
     
-    updatePosition(object) {
-        return object;
+    getDifferences() {
+        var newDiff = {
+            changes: [],
+            additions: [],
+            removals: []
+        };
+        _.each(this.objects, (o) => {
+            if (_.isObject(this.objectsPrior[o.id.toString()])) {
+                newDiff.changes.push(this.objectsPrior[o.id.toString()]);
+            }
+            /*
+            _.forIn(this.objectsPrior[o.id.toString()], (obj, key) => {
+                if (_.isEqual(obj[key], o[key]])) {
+                    delete obj[key];
+                }
+            });
+            if (_.keys(this.objectsPrior[o.id.toString()]).length > 0) {
+                newDiff.changes.push(this.objectsPrior[o.id.toString()]);
+            }
+            */
+        });
+        newDiff.additions = _.filter(this.objects, (n) => _.isUndefined(this.objectsPrior[n.id.toString()]));
+        newDiff.removals = _.filter(this.objectsPrior, (n) => _.isUndefined(this.objects[n.id.toString()]));
+        return newDiff;
+    }
+    
+    updatePastObjects() {
+        this.objectsPrior = _.cloneDeep(_.mapValues(this.objects, (o) => _.omit(o, 'map')));
+
+        _.each(this.objectsPrior, (o) => {
+            this.objectsPrior[o.id] = GameObject.revive(o);
+        });
     }
     
     collision() {
@@ -122,12 +157,28 @@ module.exports = class Map {
         }
     }
     
-    static revive(map) {
-        map = _.assign(new Map(), map);
-        for(var o in map.objects) {
-            map.objects[o] = GameObject.revive(map.objects[o]);
-            map.objects[o].map = map;
+    update(delta) {
+        this.objectsDiff = this.getDifferences();
+        this.updatePastObjects();
+        for(var obj in this.objects) {
+            if (!this.objects[obj].immovable) {
+                this.objects[obj].update(delta);
+            }
         }
-        return map;
+        this.collision();
+        
+    }
+    
+    static revive(map) {
+        if (_.isObject(map)) {
+            map = _.assign(new Map(), map);
+            for(var o in map.objects) {
+                map.objects[o] = GameObject.revive(map.objects[o]);
+                if (_.isObject(map.objects[o])) {
+                    map.objects[o].map = map;
+                }
+            }
+            return map;
+        }
     }
 };

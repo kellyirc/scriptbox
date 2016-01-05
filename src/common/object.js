@@ -10,6 +10,7 @@ module.exports = class GameObject {
         this.y = arg.y;
         this.width = arg.width;
         this.height = arg.height;
+        this.color = 0xFFFFFF;
         
         this.bounds = new Rect({
             x: (this.x - this.width / 2),
@@ -32,14 +33,13 @@ module.exports = class GameObject {
         this.velocity = { x: 0, y: 0 };
         this.acceleration = { x: 0, y: 0 };
         this.movements = { default: new Movement() };
+        this.setXAcceleration(50);
         this.immovable = false;
     }
     
     move(x, y) {
         this.x = x;
         this.y = y;
-        
-        this.map.updatePosition(this);
     }
     
     update(delta) {
@@ -122,21 +122,22 @@ module.exports = class GameObject {
     }
     
     static revive(obj) {
-        var returnObj = obj;
-        switch(obj.type) {
-            case 'GameObject':
-                var rectObj = _.pick(obj.bounds, ['x', 'y', 'width', 'height']);
-                var newObj = new GameObject(obj.map, rectObj);
-                returnObj =  _.assign(newObj, obj);
-                returnObj.bounds = Rect.revive(returnObj.bounds, returnObj);
-                var moves = returnObj.movements;
-                for(var m in moves) {
-                    moves[m] = Movement.revive(moves[m]);
-                }
-                // returnObj.movements = moves;
-                break;
-                
+        if (_.isObject(obj)) {
+            var returnObj = obj;
+            switch(obj.type) {
+                case 'GameObject':
+                    var rectObj = _.pick(obj.bounds, ['x', 'y', 'width', 'height']);
+                    var newObj = new GameObject(obj.map, rectObj);
+                    returnObj =  _.assign(newObj, obj);
+                    returnObj.bounds = Rect.revive(returnObj.bounds, returnObj);
+                    var moves = returnObj.movements;
+                    for(var m in moves) {
+                        moves[m] = Movement.revive(moves[m]);
+                    }
+                    break;
+                    
+            }
+            return returnObj;
         }
-        return returnObj;
     }
 };
